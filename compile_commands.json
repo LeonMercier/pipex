@@ -1,0 +1,20 @@
+[
+ {
+  "directory": "/home/lemercie/projects/pipex/repo",
+  "arguments": [
+   "cc",
+   "-Wextra",
+   "-Wall",
+   "-Werror",
+   "-o",
+   "src/pipex.o",
+   "-c",
+   "src/pipex.c",
+   "-I",
+   "./include",
+   "-I",
+   "./lib/libft"
+  ],
+  "file": "src/pipex.c"
+ }
+]

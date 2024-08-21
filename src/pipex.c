@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/21 12:09:11 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/21 16:48:05 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,53 @@ int	piper(char **argv, char **envp)
 	return (0);
 }
 
+char	**get_paths(char **envp)
+{
+	while (*envp)
+	{
+		if (ft_strncmp(*envp, "PATH", 4) == 0)
+		{
+			return (ft_split(*envp, ':'));
+		}
+		else
+			envp++;
+	}
+	ft_printf("Error int get_paths(); PATH not found in envp\n");
+	return (NULL);
+}
+
+char	*get_exec_path(char *command, char **envp)
+{
+	char	**paths;
+	char	*exec_name;
+	char	*exec_path;	
+	int		exec_path_len;
+
+	exec_name = ft_split(command, ' ')[0];
+	paths = get_paths(envp);
+	while (*paths)
+	{
+		exec_path_len = ft_strlen(*paths) + ft_strlen(exec_name) + 2;
+		exec_path = malloc(sizeof(char) * exec_path_len);
+		ft_strlcat(exec_path, *paths, exec_path_len);
+		ft_strlcat(exec_path, "/", exec_path_len);
+		ft_strlcat(exec_path, exec_name, exec_path_len);
+		if (access(exec_path, X_OK) == 0)
+			return (exec_path);
+		paths++;
+	}
+	ft_printf("Error in get_exec_path; executable not found or not accessible\n");
+	return (NULL);
+}
+
  // handle file opening before forking
 int	main(int argc, char **argv, char **envp)
 {
 	int	infile;
 	int	outfile;
-
+	char	*exec_path1;
+	char	*exec_path2;
+	
 	if (argc != 5)
 	{
 		ft_printf("Error: Wrong number of arguments\n");
@@ -87,6 +128,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_printf("Error: failed to open outfile\n");
 		return (1);
 	}
+	exec_path1 = get_exec_path(argv[2], envp);
+	exec_path2 = get_exec_path(argv[3], envp);
 	return (piper(argv, envp));
 }
 

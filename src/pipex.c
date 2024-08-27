@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/27 12:02:47 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/27 12:26:31 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,27 @@ char	**get_exec_path(char *command, char **envp)
 		paths++;
 	}
 	ft_printf("Error in get_exec_path; executable not found or not accessible\n");
+
 	return (NULL);
 }
 
+void	free_strv(char **strv)
+{
+	int	i;
+
+	i = 0;
+	while (strv[i])
+	{
+		free(strv[i]);
+		i++;
+	}
+	free(strv);
+}
+
  // handle file opening before forking
+//
+// TODO return exit value of the second command
+//
 int	main(int argc, char **argv, char **envp)
 {
 	t_files files;

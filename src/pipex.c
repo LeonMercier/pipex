@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/27 11:33:56 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/27 12:02:47 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_printf("Error: failed to open infile\n");
 		return (1);
 	}
-	files.outfile = open(argv[4], O_WRONLY | O_CREAT);
+	files.outfile = open(argv[4], O_WRONLY | O_CREAT, 0666);
 	if (files.outfile < 0)
 	{
 		ft_printf("Error: failed to open outfile\n");

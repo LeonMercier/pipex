@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/07/25 11:52:51 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/27 10:51:29 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,10 @@
 # include <wait.h> // waitpid()
 # include <sys/types.h>
 # include "../lib/libft/libft.h"
+typedef struct s_files
+{
+	int	infile;
+	int	outfile;
+} t_files;
 #endif
 

@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/27 17:07:42 by lemercie         ###   ########.fr       */
+/*   Created: 2024/08/27 13:57:01 by lemercie          #+#    #+#             */
+/*   Updated: 2024/08/27 16:23:16 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <unistd.h> // dup2(), access(), execve()
-# include <wait.h> // waitpid()
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include "../lib/libft/libft.h"
-typedef struct s_files
+#include "../include/pipex.h"
+
+void	free_strv(char **strv)
 {
-	int	infile;
-	int	outfile;
-} t_files;
+	int	i;
 
-void	free_strv(char **strv);
-#endif
-
+	if (strv)
+	{
+		i = 0;
+		while (strv[i])
+		{
+			free(strv[i]);
+			i++;
+		}
+		free(strv);
+	}
+}

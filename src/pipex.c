@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/28 10:55:39 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/28 11:33:24 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 	int	pid1;
 	int	pid2;
 	int	pipefd[2];
+	int	cmd2_exitstatus;
 
 	if (pipe(pipefd) == -1)
 	{
@@ -80,7 +81,9 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(pid2, &cmd2_exitstatus, 0);
+	if (WIFEXITED(cmd2_exitstatus))
+		return (WEXITSTATUS(cmd2_exitstatus));
 	return (0);
 }
 
@@ -92,8 +95,7 @@ char	**get_paths(char **envp)
 		{
 			return (ft_split(*envp, ':'));
 		}
-		else
-			envp++;
+		envp++;
 	}
 	ft_printf("Error in get_paths(); PATH not found in envp\n");
 	return (NULL);
@@ -113,7 +115,7 @@ char	**get_exec_path(char *command, char **envp)
 	if (!paths)
 	{
 		free_strv(exec_args);
-		return (NULL);
+		return (NULL); // this will end up in execve()
 	}
 	while (*paths)
 	{
@@ -135,8 +137,6 @@ char	**get_exec_path(char *command, char **envp)
 	return (NULL);
 }
 
- // handle file opening before forking
-//
 // TODO return exit value of the second command
 int	main(int argc, char **argv, char **envp)
 {

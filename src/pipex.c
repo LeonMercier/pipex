@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/27 17:27:08 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:02:01 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,33 @@
 // execve replaces the current process with the program to be executed,
 // therefore, the child will not run any code below the execve lines
 //
-// TODO: tolerate exec_args1 being NULL
+// Seems that execve() fails cleanly if exec_args is null
 int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 {
 	int	pid1;
 	int	pid2;
 	int	pipefd[2];
 
-	if (exec_args1)
+	if (pipe(pipefd) == -1)
 	{
-		if (pipe(pipefd) == -1)
-		{
-			ft_printf("Error: pipe() failed\n");
-			return (1);
-		}
-		pid1 = fork();
-		if (pid1 < 0)
-		{
-			ft_printf("Error: fork() failed\n");
-			return (1);
-		}
-		if (pid1 == 0)
-		{
-			dup2(files.infile, STDIN_FILENO);
-			close(files.infile);
-			close(files.outfile);
-			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[0]);
-			close(pipefd[1]);
-			execve(exec_args1[0], exec_args1, envp);
-		}
+		ft_printf("Error: pipe() failed\n");
+		return (1);
+	}
+	pid1 = fork();
+	if (pid1 < 0)
+	{
+		ft_printf("Error: fork() failed\n");
+		return (1);
+	}
+	if (pid1 == 0)
+	{
+		dup2(files.infile, STDIN_FILENO);
+		close(files.infile);
+		close(files.outfile);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		execve(exec_args1[0], exec_args1, envp);
 	}
 	pid2 = fork();
 	if (pid2 < 0)
@@ -62,26 +59,16 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 		dup2(files.outfile, STDOUT_FILENO);
 		close(files.infile);
 		close(files.outfile);
-		if (exec_args1)
-		{
-			dup2(pipefd[0], STDIN_FILENO);
-			close(pipefd[0]);
-			close(pipefd[1]);
-		}
-		else
-		{
-			close(STDIN_FILENO); // TODO does not work as expected
-		}
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
 		execve(exec_args2[0], exec_args2, envp);
 	}
 	close(files.infile);
 	close(files.outfile);
-	if (exec_args1)
-	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-		waitpid(pid1, NULL, 0);
-	}
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(pid1, NULL, 0);
 	waitpid(pid2, NULL, 0);
 	return (0);
 }
@@ -140,7 +127,6 @@ char	**get_exec_path(char *command, char **envp)
  // handle file opening before forking
 //
 // TODO return exit value of the second command
-// TODO run cmd2 even if cmd1 is not found or fails
 int	main(int argc, char **argv, char **envp)
 {
 	t_files files;
@@ -159,7 +145,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_printf("Error: failed to open infile\n");
 		return (1);
 	}
-	files.outfile = open(argv[4], O_WRONLY | O_CREAT, 0666);
+	files.outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (files.outfile < 0)
 	{
 		ft_printf("Error: failed to open outfile\n");

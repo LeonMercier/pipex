@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/28 11:33:24 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:08:25 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ char	**get_exec_path(char *command, char **envp)
 	exec_args = ft_split(command, ' ');
 	if (!exec_args)
 		return (NULL);
+	if (access(exec_args[0], X_OK) == 0)
+		return (exec_args);
 	paths = get_paths(envp);
 	if (!paths)
 	{
@@ -137,7 +139,7 @@ char	**get_exec_path(char *command, char **envp)
 	return (NULL);
 }
 
-// TODO return exit value of the second command
+// TODO haandle shell built-ins such as exit
 int	main(int argc, char **argv, char **envp)
 {
 	t_files files;

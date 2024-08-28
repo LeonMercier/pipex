@@ -6,11 +6,37 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/28 10:02:01 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/28 10:55:39 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+void	run_cmd1(t_files files, int pipefd[2], char **exec_args, char **envp)
+{
+	if (files.infile < 0)
+		exit(1);
+	dup2(files.infile, STDIN_FILENO);
+	close(files.infile);
+	close(files.outfile);
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	execve(exec_args[0], exec_args, envp);
+	exit(1);
+}
+
+void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
+{
+	dup2(files.outfile, STDOUT_FILENO);
+	close(files.infile);
+	close(files.outfile);
+	dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	execve(exec_args[0], exec_args, envp);
+	exit(1);
+}
 
 // return value of fork() is 0 in the child and the actual pid in the parent
 //
@@ -21,6 +47,7 @@
 // therefore, the child will not run any code below the execve lines
 //
 // Seems that execve() fails cleanly if exec_args is null
+//
 int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 {
 	int	pid1;
@@ -39,15 +66,7 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 		return (1);
 	}
 	if (pid1 == 0)
-	{
-		dup2(files.infile, STDIN_FILENO);
-		close(files.infile);
-		close(files.outfile);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-		execve(exec_args1[0], exec_args1, envp);
-	}
+		run_cmd1(files, pipefd, exec_args1, envp);
 	pid2 = fork();
 	if (pid2 < 0)
 	{
@@ -55,15 +74,7 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 		return (1);
 	}
 	if (pid2 == 0)
-	{
-		dup2(files.outfile, STDOUT_FILENO);
-		close(files.infile);
-		close(files.outfile);
-		dup2(pipefd[0], STDIN_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-		execve(exec_args2[0], exec_args2, envp);
-	}
+		run_cmd2(files, pipefd, exec_args2, envp);
 	close(files.infile);
 	close(files.outfile);
 	close(pipefd[0]);
@@ -141,10 +152,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	files.infile = open(argv[1], O_RDONLY);
 	if (files.infile < 0)
-	{
-		ft_printf("Error: failed to open infile\n");
-		return (1);
-	}
+		ft_printf("pipex: no such file or directory %s\n", argv[1]);
 	files.outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (files.outfile < 0)
 	{
@@ -154,6 +162,8 @@ int	main(int argc, char **argv, char **envp)
 	exec_args1 = get_exec_path(argv[2], envp);
 	exec_args2 = get_exec_path(argv[3], envp);
 	retval = piper(files, exec_args1, exec_args2, envp);
+	if (!exec_args2)
+		retval = 127;
 	free_strv(exec_args1);
 	free_strv(exec_args2);
 	return (retval);

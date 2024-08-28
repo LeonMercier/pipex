@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/28 15:08:25 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/28 16:07:15 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ char	**get_exec_path(char *command, char **envp)
 	char	**exec_args;
 	char	*exec_path;
 	int		exec_path_len;
+	int		i;
 
 	exec_args = ft_split(command, ' ');
 	if (!exec_args)
@@ -119,23 +120,27 @@ char	**get_exec_path(char *command, char **envp)
 		free_strv(exec_args);
 		return (NULL); // this will end up in execve()
 	}
-	while (*paths)
+	i = 0;
+	while (paths[i])
 	{
-		exec_path_len = ft_strlen(*paths) + ft_strlen(exec_args[0]) + 2;
+		exec_path_len = ft_strlen(paths[i]) + ft_strlen(exec_args[0]) + 2;
 		exec_path = malloc(sizeof(char) * exec_path_len);
-		ft_strlcat(exec_path, *paths, exec_path_len);
+		ft_strlcpy(exec_path, paths[i], exec_path_len);
 		ft_strlcat(exec_path, "/", exec_path_len);
 		ft_strlcat(exec_path, exec_args[0], exec_path_len);
 		if (access(exec_path, X_OK) == 0)
 		{
 			free(exec_args[0]);
+			free_strv(paths);
 			exec_args[0] = exec_path;
 			return (exec_args);
 		}
-		paths++;
+		free(exec_path);
+		i++;
 	}
 	ft_printf("pipex: command not found: %s\n", exec_args[0]);
 	free(exec_path);
+	free_strv(paths);
 	return (NULL);
 }
 

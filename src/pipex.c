@@ -6,23 +6,32 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/28 16:07:15 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/29 15:57:56 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
+// TODO:: if execve fails, the memory in child processes needs to be freed
 void	run_cmd1(t_files files, int pipefd[2], char **exec_args, char **envp)
 {
 	if (files.infile < 0)
+	{
+		close(files.outfile);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		free_strv(exec_args);
 		exit(1);
+	}
 	dup2(files.infile, STDIN_FILENO);
 	close(files.infile);
 	close(files.outfile);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	execve(exec_args[0], exec_args, envp);
+	if (exec_args)
+		execve(exec_args[0], exec_args, envp);
+	free_strv(exec_args);
 	exit(1);
 }
 
@@ -34,7 +43,10 @@ void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	execve(exec_args[0], exec_args, envp);
+	if (exec_args)
+		execve(exec_args[0], exec_args, envp);
+	ft_printf("freeing cmd2\n");
+	free_strv(exec_args);
 	exit(1);
 }
 
@@ -101,6 +113,8 @@ char	**get_paths(char **envp)
 	return (NULL);
 }
 
+// TODO: maybe put exec_args and exec_args[0] in a struct, so that we dont have to
+// modify the array??
 char	**get_exec_path(char *command, char **envp)
 {
 	char	**paths;
@@ -139,7 +153,7 @@ char	**get_exec_path(char *command, char **envp)
 		i++;
 	}
 	ft_printf("pipex: command not found: %s\n", exec_args[0]);
-	free(exec_path);
+	free_strv(exec_args);
 	free_strv(paths);
 	return (NULL);
 }

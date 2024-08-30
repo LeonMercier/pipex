@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/29 15:57:56 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/30 11:39:51 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,10 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 		return (1);
 	}
 	if (pid1 == 0)
+	{
+		free_strv(exec_args2);
 		run_cmd1(files, pipefd, exec_args1, envp);
+	}
 	pid2 = fork();
 	if (pid2 < 0)
 	{
@@ -87,7 +90,10 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 		return (1);
 	}
 	if (pid2 == 0)
+	{
+		free_strv(exec_args1);
 		run_cmd2(files, pipefd, exec_args2, envp);
+	}
 	close(files.infile);
 	close(files.outfile);
 	close(pipefd[0]);

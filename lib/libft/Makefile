@@ -6,7 +6,7 @@
 #    By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 10:50:44 by lemercie          #+#    #+#              #
-#    Updated: 2024/07/22 12:04:15 by lemercie         ###   ########.fr        #
+#    Updated: 2024/08/30 14:56:28 by lemercie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,8 @@ $(NAME): $(OBJS) $(OBJS_BONUS) $(OBJS_FT_PRINTF) $(OBJS_GNL)
 	${CC} ${CFLAGS} -c $< -o $@
 
 clean: 
+	rm -f $(FT_PRINTF)*.o
+	rm -f $(GNL)*.o
 	rm -f *.o
 
 fclean: clean

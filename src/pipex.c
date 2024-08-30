@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/30 11:39:51 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/30 15:55:13 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
 	close(pipefd[1]);
 	if (exec_args)
 		execve(exec_args[0], exec_args, envp);
-	ft_printf("freeing cmd2\n");
 	free_strv(exec_args);
 	exit(1);
 }
@@ -158,7 +157,7 @@ char	**get_exec_path(char *command, char **envp)
 		free(exec_path);
 		i++;
 	}
-	ft_printf("pipex: command not found: %s\n", exec_args[0]);
+	ft_printf("command not found: %s\n", exec_args[0]);
 	free_strv(exec_args);
 	free_strv(paths);
 	return (NULL);
@@ -179,11 +178,15 @@ int	main(int argc, char **argv, char **envp)
 	}
 	files.infile = open(argv[1], O_RDONLY);
 	if (files.infile < 0)
-		ft_printf("pipex: no such file or directory %s\n", argv[1]);
+	{
+		//ft_putstr_fd("no such file or direcory\n", 2);
+		//ft_printf("no such file or directory: %s\n", argv[1]);
+	}
 	files.outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (files.outfile < 0)
 	{
-		ft_printf("Error: failed to open outfile\n");
+		//ft_putstr_fd("no such file or directory\n", 2);
+//		ft_printf("no such file or directory: %s\n", argv[4]);
 		return (1);
 	}
 	exec_args1 = get_exec_path(argv[2], envp);

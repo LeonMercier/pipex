@@ -6,14 +6,14 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/27 17:07:42 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/30 12:25:11 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 # include <unistd.h> // dup2(), access(), execve()
-# include <wait.h> // waitpid()
+# include <sys/wait.h> // waitpid()
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>

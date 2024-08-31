@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/30 15:55:13 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/31 13:10:46 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ char	**get_exec_path(char *command, char **envp)
 	int		i;
 
 	exec_args = ft_split(command, ' ');
-	if (!exec_args)
+	if (!exec_args || !exec_args[0])
 		return (NULL);
 	if (access(exec_args[0], X_OK) == 0)
 		return (exec_args);
@@ -163,7 +163,6 @@ char	**get_exec_path(char *command, char **envp)
 	return (NULL);
 }
 
-// TODO haandle shell built-ins such as exit
 int	main(int argc, char **argv, char **envp)
 {
 	t_files files;
@@ -179,13 +178,13 @@ int	main(int argc, char **argv, char **envp)
 	files.infile = open(argv[1], O_RDONLY);
 	if (files.infile < 0)
 	{
-		//ft_putstr_fd("no such file or direcory\n", 2);
+		ft_putstr_fd("infile no such file or directory: \n", 1);
 		//ft_printf("no such file or directory: %s\n", argv[1]);
 	}
 	files.outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (files.outfile < 0)
 	{
-		//ft_putstr_fd("no such file or directory\n", 2);
+		ft_putstr_fd("outfile no such file or directory: \n", 1);
 //		ft_printf("no such file or directory: %s\n", argv[4]);
 		return (1);
 	}

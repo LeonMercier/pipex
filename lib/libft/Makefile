@@ -6,12 +6,12 @@
 #    By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/24 10:50:44 by lemercie          #+#    #+#              #
-#    Updated: 2024/08/30 14:56:28 by lemercie         ###   ########.fr        #
+#    Updated: 2024/08/31 13:04:17 by lemercie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 FT_PRINTF = ft_printf/
 GNL = get_next_line/

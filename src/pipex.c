@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/31 13:10:46 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/31 15:09:39 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,9 @@ char	**get_paths(char **envp)
 		}
 		envp++;
 	}
-	ft_printf("Error in get_paths(); PATH not found in envp\n");
 	return (NULL);
 }
 
-// TODO: maybe put exec_args and exec_args[0] in a struct, so that we dont have to
-// modify the array??
 char	**get_exec_path(char *command, char **envp)
 {
 	char	**paths;
@@ -136,6 +133,9 @@ char	**get_exec_path(char *command, char **envp)
 	paths = get_paths(envp);
 	if (!paths)
 	{
+		ft_putstr_fd("Command not found: ", 2);
+		ft_putstr_fd(exec_args[0], 2);
+		ft_putstr_fd("\n", 2);
 		free_strv(exec_args);
 		return (NULL); // this will end up in execve()
 	}
@@ -157,12 +157,22 @@ char	**get_exec_path(char *command, char **envp)
 		free(exec_path);
 		i++;
 	}
+	// zsh: no such file or directory: /bin/blabla
 	ft_printf("command not found: %s\n", exec_args[0]);
 	free_strv(exec_args);
 	free_strv(paths);
 	return (NULL);
 }
 
+void print_error(char *message, char *filename)
+{
+	ft_putstr_fd(message, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(filename, 2);
+	ft_putstr_fd("\n", 2);
+}
+
+// zsh if cmd is an emtty string ==> permission denied
 int	main(int argc, char **argv, char **envp)
 {
 	t_files files;
@@ -178,14 +188,12 @@ int	main(int argc, char **argv, char **envp)
 	files.infile = open(argv[1], O_RDONLY);
 	if (files.infile < 0)
 	{
-		ft_putstr_fd("infile no such file or directory: \n", 1);
-		//ft_printf("no such file or directory: %s\n", argv[1]);
+		print_error(strerror(errno), argv[1]);
 	}
 	files.outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (files.outfile < 0)
 	{
-		ft_putstr_fd("outfile no such file or directory: \n", 1);
-//		ft_printf("no such file or directory: %s\n", argv[4]);
+		print_error(strerror(errno), argv[4]);
 		return (1);
 	}
 	exec_args1 = get_exec_path(argv[2], envp);

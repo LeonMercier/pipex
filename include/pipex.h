@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/30 12:25:11 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/08/31 14:58:24 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <string.h> // strerror
+# include <stdio.h> // perror()
+# include <errno.h> //perror ()
 # include "../lib/libft/libft.h"
 typedef struct s_files
 {

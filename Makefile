@@ -6,7 +6,7 @@
 #    By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/01 11:56:58 by lemercie          #+#    #+#              #
-#    Updated: 2024/08/29 13:18:55 by lemercie         ###   ########.fr        #
+#    Updated: 2024/09/04 12:16:48 by leon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBFT	:= ./lib/libft
 
 HEADERS	:= -I ./include -I $(LIBFT)
 SRCDIR	:= ./src/
-SRCS	:= $(addprefix $(SRCDIR),pipex.c utils.c)
+SRCS	:= $(addprefix $(SRCDIR),pipex.c paths.c utils.c)
 OBJS	:= ${SRCS:.c=.o}
 
 all: libft $(NAME)

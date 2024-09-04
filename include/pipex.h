@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/31 14:58:24 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:15:52 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ typedef struct s_files
 	int	infile;
 	int	outfile;
 } t_files;
-
+// paths.c
+char	**get_paths(char **envp);
+char	**get_exec_path(char *command, char **envp);
+// utils.c
+void	print_error(char *message, char *filename);
 void	free_strv(char **strv);
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/08/31 15:09:39 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/04 12:16:10 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,82 +104,16 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 	return (0);
 }
 
-char	**get_paths(char **envp)
-{
-	while (*envp)
-	{
-		if (ft_strncmp(*envp, "PATH=", 5) == 0)
-		{
-			return (ft_split(*envp, ':'));
-		}
-		envp++;
-	}
-	return (NULL);
-}
 
-char	**get_exec_path(char *command, char **envp)
-{
-	char	**paths;
-	char	**exec_args;
-	char	*exec_path;
-	int		exec_path_len;
-	int		i;
-
-	exec_args = ft_split(command, ' ');
-	if (!exec_args || !exec_args[0])
-		return (NULL);
-	if (access(exec_args[0], X_OK) == 0)
-		return (exec_args);
-	paths = get_paths(envp);
-	if (!paths)
-	{
-		ft_putstr_fd("Command not found: ", 2);
-		ft_putstr_fd(exec_args[0], 2);
-		ft_putstr_fd("\n", 2);
-		free_strv(exec_args);
-		return (NULL); // this will end up in execve()
-	}
-	i = 0;
-	while (paths[i])
-	{
-		exec_path_len = ft_strlen(paths[i]) + ft_strlen(exec_args[0]) + 2;
-		exec_path = malloc(sizeof(char) * exec_path_len);
-		ft_strlcpy(exec_path, paths[i], exec_path_len);
-		ft_strlcat(exec_path, "/", exec_path_len);
-		ft_strlcat(exec_path, exec_args[0], exec_path_len);
-		if (access(exec_path, X_OK) == 0)
-		{
-			free(exec_args[0]);
-			free_strv(paths);
-			exec_args[0] = exec_path;
-			return (exec_args);
-		}
-		free(exec_path);
-		i++;
-	}
-	// zsh: no such file or directory: /bin/blabla
-	ft_printf("command not found: %s\n", exec_args[0]);
-	free_strv(exec_args);
-	free_strv(paths);
-	return (NULL);
-}
-
-void print_error(char *message, char *filename)
-{
-	ft_putstr_fd(message, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(filename, 2);
-	ft_putstr_fd("\n", 2);
-}
 
 // zsh if cmd is an emtty string ==> permission denied
 int	main(int argc, char **argv, char **envp)
 {
-	t_files files;
+	t_files	files;
 	char	**exec_args1;
 	char	**exec_args2;
 	int		retval;
-	
+
 	if (argc != 5)
 	{
 		ft_printf("Error: Wrong number of arguments\n");
@@ -205,11 +139,3 @@ int	main(int argc, char **argv, char **envp)
 	free_strv(exec_args2);
 	return (retval);
 }
-
-
-
-
-
-
-
-

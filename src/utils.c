@@ -6,11 +6,45 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:57:01 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/04 12:15:39 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/04 16:30:38 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+int	open_files(t_files *files, char *infile_name, char *outfile_name)
+{
+	files->infile = open(infile_name, O_RDONLY);
+	if (files->infile < 0)
+		print_error(strerror(errno), infile_name);
+	files->outfile = open(outfile_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	if (files->outfile < 0)
+	{
+		print_error(strerror(errno), outfile_name);
+	}
+	return (0);
+}
+
+void	close_all(t_files files, int pipefd[2])
+{
+	if (files.infile > -1)
+		close(files.infile);
+	if (files.outfile > -1)
+		close(files.outfile);
+	close(pipefd[0]);
+	close(pipefd[1]);
+}
+
+void	error_piper(int *retval)
+{
+	if (*retval == 4)
+		ft_putstr_fd("Error: pipe() failed\n", 2);
+	else if (*retval == 2)
+		ft_putstr_fd("Error: first fork() failed\n", 2);
+	else if (*retval == 3)
+		ft_putstr_fd("Error: second fork() failed\n", 2);
+	*retval = 1;
+}
 
 void	print_error(char *message, char *filename)
 {

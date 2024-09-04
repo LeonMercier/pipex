@@ -1,8 +1,9 @@
 [
  {
-  "directory": "/home/lemercie/projects/pipex/repo",
+  "directory": "/home/leon/hive/projects/pipex/repo",
   "arguments": [
    "cc",
+   "-g",
    "-Wextra",
    "-Wall",
    "-Werror",
@@ -16,5 +17,43 @@
    "./lib/libft"
   ],
   "file": "src/pipex.c"
+ },
+ {
+  "directory": "/home/leon/hive/projects/pipex/repo",
+  "arguments": [
+   "cc",
+   "-g",
+   "-Wextra",
+   "-Wall",
+   "-Werror",
+   "-o",
+   "src/paths.o",
+   "-c",
+   "src/paths.c",
+   "-I",
+   "./include",
+   "-I",
+   "./lib/libft"
+  ],
+  "file": "src/paths.c"
+ },
+ {
+  "directory": "/home/leon/hive/projects/pipex/repo",
+  "arguments": [
+   "cc",
+   "-g",
+   "-Wextra",
+   "-Wall",
+   "-Werror",
+   "-o",
+   "src/utils.o",
+   "-c",
+   "src/utils.c",
+   "-I",
+   "./include",
+   "-I",
+   "./lib/libft"
+  ],
+  "file": "src/utils.c"
  }
 ]

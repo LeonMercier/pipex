@@ -6,13 +6,13 @@
 /*   By: leon </var/spool/mail/leon>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:13:05 by leon              #+#    #+#             */
-/*   Updated: 2024/09/04 14:18:36 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/04 16:52:45 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-char	**get_paths(char **envp)
+static char	**get_paths(char **envp)
 {
 	while (*envp)
 	{
@@ -25,7 +25,7 @@ char	**get_paths(char **envp)
 	return (NULL);
 }
 
-char	*create_path(char *dir, char *cmd)
+static char	*create_path(char *dir, char *cmd)
 {
 	int		exec_path_len;
 	char	*exec_path;
@@ -40,7 +40,7 @@ char	*create_path(char *dir, char *cmd)
 	return (exec_path);
 }
 
-int	find_in_paths(char **paths, char **exec_args)
+static int	find_in_paths(char **paths, char **exec_args)
 {
 	char	*exec_path;
 	int		i;

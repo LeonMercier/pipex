@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/04 16:26:57 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/05 15:57:49 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ void	run_cmd1(t_files files, int pipefd[2], char **exec_args, char **envp)
 
 void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
 {
+	int	retval;
+
+	retval = 1;
 	if (files.outfile > -1)
 	{
 		dup2(files.outfile, STDOUT_FILENO);
@@ -46,10 +49,11 @@ void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
 		close(pipefd[1]);
 		if (exec_args)
 			execve(exec_args[0], exec_args, envp);
+		retval = 127;
 	}
 	close_all(files, pipefd);
 	free_strv(exec_args);
-	exit(1);
+	exit(retval);
 }
 
 int	wait_pids(int pid1, int pid2)
@@ -80,10 +84,10 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 	int	pipefd[2];
 
 	if (pipe(pipefd) == -1)
-		return (4);
+		return (1);
 	pid1 = fork();
 	if (pid1 < 0)
-		return (2);
+		return (1);
 	if (pid1 == 0)
 	{
 		free_strv(exec_args2);
@@ -91,7 +95,7 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 	}
 	pid2 = fork();
 	if (pid2 < 0)
-		return (3);
+		return (1);
 	if (pid2 == 0)
 	{
 		free_strv(exec_args1);
@@ -102,12 +106,18 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 }
 
 // zsh if cmd is an emtty string ==> permission denied
+// zsh: cmd2 == "" return 126 
+// 		found but not executable (or other problem)
+// zsh: cmd2 == non executable return 127
+// 		not found
+// but if outfile is not found, return 1 regardless
 int	main(int argc, char **argv, char **envp)
 {
 	t_files	files;
 	char	**exec_args1;
 	char	**exec_args2;
 	int		retval;
+	int		path_error;
 
 	if (argc != 5)
 	{
@@ -115,14 +125,15 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	open_files(&files, argv[1], argv[4]);
-	exec_args1 = get_exec_path(argv[2], envp);
-	exec_args2 = get_exec_path(argv[3], envp);
+	path_error = 0;
+	exec_args1 = get_exec_path(argv[2], envp, &path_error);
+	exec_args2 = get_exec_path(argv[3], envp, &path_error);
 	retval = piper(files, exec_args1, exec_args2, envp);
-	if (retval > 1)
-		error_piper(&retval);
-	if (!exec_args2)
-		retval = 127;
 	free_strv(exec_args1);
 	free_strv(exec_args2);
+	if (path_error > 0)
+		retval = path_error;
+	if (files.outfile < 0)
+		retval = 1;
 	return (retval);
 }

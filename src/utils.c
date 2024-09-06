@@ -6,11 +6,23 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:57:01 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/04 16:30:38 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/06 18:18:23 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
+
+int	check_exec_access(char *cmd, int *path_error)
+{
+	if (access(cmd, F_OK) == 0)
+	{
+		if (access(cmd, X_OK) == 0)
+			return (0);
+		*path_error = 126;
+		return (2);
+	}
+	return (1);
+}
 
 int	open_files(t_files *files, char *infile_name, char *outfile_name)
 {
@@ -33,17 +45,6 @@ void	close_all(t_files files, int pipefd[2])
 		close(files.outfile);
 	close(pipefd[0]);
 	close(pipefd[1]);
-}
-
-void	error_piper(int *retval)
-{
-	if (*retval == 4)
-		ft_putstr_fd("Error: pipe() failed\n", 2);
-	else if (*retval == 2)
-		ft_putstr_fd("Error: first fork() failed\n", 2);
-	else if (*retval == 3)
-		ft_putstr_fd("Error: second fork() failed\n", 2);
-	*retval = 1;
 }
 
 void	print_error(char *message, char *filename)

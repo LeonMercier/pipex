@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/05 15:57:49 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/06 18:22:04 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 // zsh: cmd2 == non executable return 127
 // 		not found
 // but if outfile is not found, return 1 regardless
+// path_error is written to between the calls to get_exec_path() because
+// it is only important for cmd2
 int	main(int argc, char **argv, char **envp)
 {
 	t_files	files;
@@ -125,8 +127,8 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	open_files(&files, argv[1], argv[4]);
-	path_error = 0;
 	exec_args1 = get_exec_path(argv[2], envp, &path_error);
+	path_error = 0;
 	exec_args2 = get_exec_path(argv[3], envp, &path_error);
 	retval = piper(files, exec_args1, exec_args2, envp);
 	free_strv(exec_args1);

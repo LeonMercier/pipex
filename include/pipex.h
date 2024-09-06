@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/05 15:11:38 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/06 18:18:46 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ typedef struct s_files
 // paths.c
 char	**get_exec_path(char *command, char **envp, int *path_error);
 // utils.c
+int		check_exec_access(char *cmd, int *path_error);
 int		open_files(t_files *files, char *infile_name, char *outfile_name);
 void	close_all(t_files files, int pipefd[2]);
-void	error_piper(int *retval);
 void	print_error(char *message, char *filename);
 void	free_strv(char **strv);
 #endif

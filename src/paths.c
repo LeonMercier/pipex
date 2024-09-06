@@ -6,7 +6,7 @@
 /*   By: leon </var/spool/mail/leon>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:13:05 by leon              #+#    #+#             */
-/*   Updated: 2024/09/05 16:30:47 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/06 18:22:18 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,15 @@ static int	find_in_paths(char **paths, char **exec_args, int *path_error)
 		exec_path = create_path(paths[i], exec_args[0]);
 		if (!exec_path)
 			return (1);
-		if (access(exec_path, F_OK) == 0)
+		if (check_exec_access(exec_path, path_error) == 0)
 		{
-			if (access(exec_path, X_OK) != 0)
-			{
-				*path_error = 126;
-				return (1);
-			}
 			free(exec_args[0]);
 			free_strv(paths);
 			exec_args[0] = exec_path;
 			return (0);
 		}
+		if (check_exec_access(exec_path, path_error) == 2)
+			return (1);
 		free(exec_path);
 		i++;
 	}
@@ -70,36 +67,10 @@ static int	find_in_paths(char **paths, char **exec_args, int *path_error)
 	return (1);
 }
 
-// if the cmd is an empty string ==> return 126
-// if the cmd is a real file but not executable ==> return 126
-// if the cmd is not found ==> return 127
-// path_error is overwritten in the beginning because we only care about 
-// error in cmd2
-char	**get_exec_path(char *command, char **envp, int *path_error)
+char	**search_paths(char **exec_args, char **envp, int *path_error)
 {
 	char	**paths;
-	char	**exec_args;
 
-	*path_error = 0;
-	exec_args = ft_split(command, ' ');
-	if (!exec_args)
-		return (NULL);
-	if (!exec_args[0])
-	{
-		*path_error = 126;
-		return (NULL);
-	}
-	if (access(exec_args[0], F_OK) == 0)
-	{
-		if (access(exec_args[0], X_OK) != 0)
-		{	
-			ft_printf("pathname: %s\n", exec_args[0]);
-			*path_error = 126;
-			return (NULL);
-		}
-		else
-			return (exec_args);
-	}
 	paths = get_paths(envp);
 	if (!paths)
 	{
@@ -115,4 +86,26 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 		return (NULL);
 	}
 	return (exec_args);
+}
+
+// if the cmd is an empty string ==> return 126
+// if the cmd is a real file but not executable ==> return 126
+// if the cmd is not found ==> return 127
+char	**get_exec_path(char *command, char **envp, int *path_error)
+{
+	char	**exec_args;
+
+	exec_args = ft_split(command, ' ');
+	if (!exec_args)
+		return (NULL);
+	if (!exec_args[0])
+	{
+		*path_error = 126;
+		return (NULL);
+	}
+	if (check_exec_access(exec_args[0], path_error) == 0)
+		return (exec_args);
+	if (check_exec_access(exec_args[0], path_error) == 2)
+		return (NULL);
+	return (search_paths(exec_args, envp, path_error));
 }

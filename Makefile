@@ -6,13 +6,12 @@
 #    By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/01 11:56:58 by lemercie          #+#    #+#              #
-#    Updated: 2024/09/04 12:16:48 by leon             ###   ########.fr        #
+#    Updated: 2024/09/12 14:08:15 by leon             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		:= cc
 CFLAGS	:= -g -Wextra -Wall -Werror
-#CFLAGS	:= 
 NAME	:= pipex
 LIBFT	:= ./lib/libft
 

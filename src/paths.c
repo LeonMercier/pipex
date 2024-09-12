@@ -6,7 +6,7 @@
 /*   By: leon </var/spool/mail/leon>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:13:05 by leon              #+#    #+#             */
-/*   Updated: 2024/09/06 18:22:18 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/12 14:07:14 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	find_in_paths(char **paths, char **exec_args, int *path_error)
 	return (1);
 }
 
-char	**search_paths(char **exec_args, char **envp, int *path_error)
+static char	**search_paths(char **exec_args, char **envp, int *path_error)
 {
 	char	**paths;
 

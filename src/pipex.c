@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/06 18:22:04 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/12 14:10:08 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ int	wait_pids(int pid1, int pid2)
 // therefore, the child will not run any code below the execve lines
 //
 // Seems that execve() fails cleanly if exec_args is null
-//
 int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 {
 	int	pid1;
@@ -105,13 +104,13 @@ int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
 	return (wait_pids(pid1, pid2));
 }
 
-// zsh if cmd is an emtty string ==> permission denied
-// zsh: cmd2 == "" return 126 
-// 		found but not executable (or other problem)
-// zsh: cmd2 == non executable return 127
-// 		not found
+// zsh: return 126 
+// 		cmd2 found but not executable (or other problem)
+// 		also when cmd2 is an empty string
+// zsh: return 127
+// 		cmd2 not found
 // but if outfile is not found, return 1 regardless
-// path_error is written to between the calls to get_exec_path() because
+// path_error is reset between the calls to get_exec_path() because
 // it is only important for cmd2
 int	main(int argc, char **argv, char **envp)
 {

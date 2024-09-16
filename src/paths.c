@@ -6,7 +6,7 @@
 /*   By: leon </var/spool/mail/leon>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 12:13:05 by leon              #+#    #+#             */
-/*   Updated: 2024/09/12 14:07:14 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/16 15:10:09 by leon             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,9 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 	if (check_exec_access(exec_args[0], path_error) == 0)
 		return (exec_args);
 	if (check_exec_access(exec_args[0], path_error) == 2)
+	{
+		print_error("Command not found", exec_args[0]);
 		return (NULL);
+	}
 	return (search_paths(exec_args, envp, path_error));
 }

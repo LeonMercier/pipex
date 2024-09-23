@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 15:11:58 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:04:36 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,25 +88,12 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 	return (exec_args);
 }
 
-bool	is_abs_or_pwd_path(char *cmd)
-{
-	if (cmd && ft_strlen(cmd) > 1)
-	{
-		if (ft_strncmp(cmd, "/", 1))
-			return (true);
-		if (ft_strncmp(cmd, "./", 2) == 0)
-			return (true);
-	}
-	return (false);
-}
-
 // 3 possibilities
 // 		absolute path
 // 		path found in PATH
 // 		current dir with ./
-//TODO: only search current dir if there is a ./
 // if the cmd is an empty string ==> return 126
-// if the cmd is a real file but not executable ==> return 127
+// if the cmd is a real file but not executable ==> return 126
 // if the cmd is not found ==> return 127
 char	**get_exec_path(char *command, char **envp, int *path_error)
 {
@@ -128,7 +115,6 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 			return (exec_args);
 		if (exec_access_error == 2)
 		{
-//			print_error("Permission denied", exec_args[0]);
 			print_error(strerror(errno), exec_args[0]);
 			return (NULL);
 		}

@@ -6,23 +6,11 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:57:01 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 12:33:00 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:01:09 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
-
-int	check_exec_access(char *cmd, int *path_error)
-{
-	if (access(cmd, F_OK) == 0)
-	{
-		if (access(cmd, X_OK) == 0)
-			return (0);
-		*path_error = 126;
-		return (2);
-	}
-	return (1);
-}
 
 int	open_files(t_files *files, char *infile_name, char *outfile_name)
 {

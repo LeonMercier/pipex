@@ -6,13 +6,13 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/12 14:10:08 by leon             ###   ########.fr       */
+/*   Updated: 2024/09/23 16:03:48 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	run_cmd1(t_files files, int pipefd[2], char **exec_args, char **envp)
+static void	run_cmd1(t_files files, int pipefd[2], char **exec_args, char **envp)
 {
 	if (files.infile < 0)
 	{
@@ -34,7 +34,7 @@ void	run_cmd1(t_files files, int pipefd[2], char **exec_args, char **envp)
 	exit(1);
 }
 
-void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
+static void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
 {
 	int	retval;
 
@@ -56,7 +56,7 @@ void	run_cmd2(t_files files, int pipefd[2], char **exec_args, char **envp)
 	exit(retval);
 }
 
-int	wait_pids(int pid1, int pid2)
+static int	wait_pids(int pid1, int pid2)
 {
 	int	cmd2_exitstatus;
 
@@ -76,7 +76,8 @@ int	wait_pids(int pid1, int pid2)
 // therefore, the child will not run any code below the execve lines
 //
 // Seems that execve() fails cleanly if exec_args is null
-int	piper(t_files files, char **exec_args1, char **exec_args2, char **envp)
+static int	piper(t_files files, char **exec_args1, char **exec_args2,
+	char **envp)
 {
 	int	pid1;
 	int	pid2;

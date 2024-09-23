@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   paths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leon </var/spool/mail/leon>                +#+  +:+       +#+        */
+/*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 12:13:05 by leon              #+#    #+#             */
-/*   Updated: 2024/09/16 15:10:09 by leon             ###   ########.fr       */
+/*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
+/*   Updated: 2024/09/23 15:11:58 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,30 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 	return (exec_args);
 }
 
+bool	is_abs_or_pwd_path(char *cmd)
+{
+	if (cmd && ft_strlen(cmd) > 1)
+	{
+		if (ft_strncmp(cmd, "/", 1))
+			return (true);
+		if (ft_strncmp(cmd, "./", 2) == 0)
+			return (true);
+	}
+	return (false);
+}
+
+// 3 possibilities
+// 		absolute path
+// 		path found in PATH
+// 		current dir with ./
+//TODO: only search current dir if there is a ./
 // if the cmd is an empty string ==> return 126
-// if the cmd is a real file but not executable ==> return 126
+// if the cmd is a real file but not executable ==> return 127
 // if the cmd is not found ==> return 127
 char	**get_exec_path(char *command, char **envp, int *path_error)
 {
 	char	**exec_args;
+	int		exec_access_error;
 
 	exec_args = ft_split(command, ' ');
 	if (!exec_args)
@@ -103,12 +121,17 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 		*path_error = 126;
 		return (NULL);
 	}
-	if (check_exec_access(exec_args[0], path_error) == 0)
-		return (exec_args);
-	if (check_exec_access(exec_args[0], path_error) == 2)
+	if (is_abs_or_pwd_path(exec_args[0]))
 	{
-		print_error("Command not found", exec_args[0]);
-		return (NULL);
+		exec_access_error = check_exec_access(exec_args[0], path_error);
+		if (exec_access_error == 0)
+			return (exec_args);
+		if (exec_access_error == 2)
+		{
+//			print_error("Permission denied", exec_args[0]);
+			print_error(strerror(errno), exec_args[0]);
+			return (NULL);
+		}
 	}
 	return (search_paths(exec_args, envp, path_error));
 }

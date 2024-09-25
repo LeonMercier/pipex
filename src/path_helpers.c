@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:59:59 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 16:07:20 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:37:37 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ bool	is_abs_or_pwd_path(char *cmd)
 {
 	if (cmd && ft_strlen(cmd) > 1)
 	{
+		if (ft_strchr(cmd, '/'))
+			return (true);
+	  	/*
 		if (ft_strncmp(cmd, "/", 1) == 0)
 			return (true);
 		if (ft_strncmp(cmd, "./", 2) == 0)
-			return (true);
+			return (true);*/
 	}
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 11:23:06 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 13:22:54 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,11 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 	return (exec_args);
 }
 
-// 3 possibilities
+// 4 possibilities
 // 		absolute path to executable
 // 		executable found in PATH
 // 		executable in current dir with ./
+// 		executable under current dir starting with a directory name without ./
 // if the cmd is an empty string ==> return 126
 // if the cmd is a real file but not executable ==> return 126
 // if the cmd is not found ==> return 127

@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 16:52:49 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 09:22:13 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,12 @@ static int	piper(t_files files, char **exec_args1, char **exec_args2,
 
 // zsh: return 126 
 // 		cmd2 found but not executable (or other problem)
-// 		also when cmd2 is an empty string
+// 		cmd2 is an empty string
 // zsh: return 127
 // 		cmd2 not found
-// but if outfile is not found, return 1 regardless
-// path_error is reset between the calls to get_exec_path() because
-// it is only important for cmd2
+// but if outfile is not writeable, return 1 regardless
+// path_error is reset between the calls to get_exec_path() because it
+// 	is only important for cmd2
 int	main(int argc, char **argv, char **envp)
 {
 	t_files	files;

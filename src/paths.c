@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 16:04:36 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 09:23:22 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ static char	**get_paths(char **envp)
 	while (*envp)
 	{
 		if (ft_strncmp(*envp, "PATH=", 5) == 0)
-		{
 			return (ft_split(*envp, ':'));
-		}
 		envp++;
 	}
 	return (NULL);
@@ -89,9 +87,9 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 }
 
 // 3 possibilities
-// 		absolute path
-// 		path found in PATH
-// 		current dir with ./
+// 		absolute path to executable
+// 		executable found in PATH
+// 		executable in current dir with ./
 // if the cmd is an empty string ==> return 126
 // if the cmd is a real file but not executable ==> return 126
 // if the cmd is not found ==> return 127

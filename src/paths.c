@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 11:20:46 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 11:23:06 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 	if (!exec_args[0])
 	{
 		print_error("Command not found", exec_args[0]);
+		free_strv(exec_args);
 		*path_error = 126;
 		return (NULL);
 	}

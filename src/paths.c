@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 09:23:22 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 09:29:50 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 		if (exec_access_error == 2)
 		{
 			print_error(strerror(errno), exec_args[0]);
+			free_strv(exec_args);
 			return (NULL);
 		}
 	}

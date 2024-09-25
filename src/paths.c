@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 13:22:54 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:02:34 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 // 		executable in current dir with ./
 // 		executable under current dir starting with a directory name without ./
 // if the cmd is an empty string ==> return 126
+// if the cmd is a space ==> return 127
 // if the cmd is a real file but not executable ==> return 126
 // if the cmd is not found ==> return 127
 char	**get_exec_path(char *command, char **envp, int *path_error)
@@ -99,6 +100,12 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 	char	**exec_args;
 	int		exec_access_error;
 
+	if (!command || !command[0])
+	{
+		print_error("Command not found", NULL);
+		*path_error = 126;
+		return (NULL);
+	}
 	exec_args = ft_split(command, ' ');
 	if (!exec_args)
 		return (NULL);
@@ -106,7 +113,7 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 	{
 		print_error("Command not found", exec_args[0]);
 		free_strv(exec_args);
-		*path_error = 126;
+		*path_error = 127;
 		return (NULL);
 	}
 	if (is_abs_or_pwd_path(exec_args[0]))

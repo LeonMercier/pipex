@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 16:02:13 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 09:25:48 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	is_abs_or_pwd_path(char *cmd);
 int		check_exec_access(char *cmd, int *path_error);
 // utils.c
 int		check_exec_access(char *cmd, int *path_error);
-int		open_files(t_files *files, char *infile_name, char *outfile_name);
+void		open_files(t_files *files, char *infile_name, char *outfile_name);
 void	close_all(t_files files, int pipefd[2]);
 void	print_error(char *message, char *filename);
 void	free_strv(char **strv);

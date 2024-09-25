@@ -6,23 +6,20 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 13:57:01 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/23 16:01:09 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 09:25:38 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-int	open_files(t_files *files, char *infile_name, char *outfile_name)
+void	open_files(t_files *files, char *infile_name, char *outfile_name)
 {
 	files->infile = open(infile_name, O_RDONLY);
 	if (files->infile < 0)
 		print_error(strerror(errno), infile_name);
 	files->outfile = open(outfile_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (files->outfile < 0)
-	{
 		print_error(strerror(errno), outfile_name);
-	}
-	return (0);
 }
 
 void	close_all(t_files files, int pipefd[2])

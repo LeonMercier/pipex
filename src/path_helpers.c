@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:59:59 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 15:24:30 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:43:31 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,15 @@ int	check_exec_access(char *cmd)
 		return (126);
 	}
 	return (127);
+}
+
+char	**get_paths(char **envp)
+{
+	while (*envp)
+	{
+		if (ft_strncmp(*envp, "PATH=", 5) == 0)
+			return (ft_split(*envp, ':'));
+		envp++;
+	}
+	return (NULL);
 }

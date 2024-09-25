@@ -6,22 +6,11 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 15:24:47 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:46:23 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
-
-static char	**get_paths(char **envp)
-{
-	while (*envp)
-	{
-		if (ft_strncmp(*envp, "PATH=", 5) == 0)
-			return (ft_split(*envp, ':'));
-		envp++;
-	}
-	return (NULL);
-}
 
 static char	*create_path(char *dir, char *cmd)
 {
@@ -96,16 +85,10 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 // if the cmd is a space ==> return 127
 // if the cmd is a real file but not executable ==> return 126
 // if the cmd is not found ==> return 127
-char	**get_exec_path(char *command, char **envp, int *path_error)
-{
+char	**get_exec_path_more(char *command, char **envp, int *path_error)
+{	
 	char	**exec_args;
 
-	if (!command || !command[0])
-	{
-		print_error("Command not found", NULL);
-		*path_error = 126;
-		return (NULL);
-	}
 	exec_args = ft_split(command, ' ');
 	if (!exec_args)
 		return (NULL);
@@ -129,4 +112,15 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 		}
 	}
 	return (search_paths(exec_args, envp, path_error));
+}
+
+char	**get_exec_path(char *command, char **envp, int *path_error)
+{
+	if (!command || !command[0])
+	{
+		print_error("Command not found", NULL);
+		*path_error = 126;
+		return (NULL);
+	}
+	return (get_exec_path_more(command, envp, path_error));
 }

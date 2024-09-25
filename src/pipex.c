@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 09:22:13 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 10:47:26 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static void	run_cmd1(t_files files, int pipefd[2], char **exec_args,
 	}
 	dup2(files.infile, STDIN_FILENO);
 	close(files.infile);
-	close(files.outfile);
+	if (files.outfile > -1)
+		close(files.outfile);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[0]);
 	close(pipefd[1]);
@@ -44,7 +45,8 @@ static void	run_cmd2(t_files files, int pipefd[2], char **exec_args,
 	if (files.outfile > -1)
 	{
 		dup2(files.outfile, STDOUT_FILENO);
-		close(files.infile);
+		if (files.infile > -1)
+			close(files.infile);
 		close(files.outfile);
 		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
@@ -125,7 +127,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		ft_printf("Error: Wrong number of arguments\n");
+		ft_putstr_fd("Error: Wrong number of arguments\n", 2);
 		return (1);
 	}
 	open_files(&files, argv[1], argv[4]);

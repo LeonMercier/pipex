@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 14:02:34 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:24:47 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,15 @@ static int	find_in_paths(char **paths, char **exec_args, int *path_error)
 		exec_path = create_path(paths[i], exec_args[0]);
 		if (!exec_path)
 			return (1);
-		if (check_exec_access(exec_path, path_error) == 0)
+		*path_error = check_exec_access(exec_path);
+		if (*path_error == 0)
 		{
 			free(exec_args[0]);
 			free_strv(paths);
 			exec_args[0] = exec_path;
 			return (0);
 		}
-		if (check_exec_access(exec_path, path_error) == 2)
+		if (*path_error == 126)
 			return (1);
 		free(exec_path);
 		i++;
@@ -98,7 +99,6 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 char	**get_exec_path(char *command, char **envp, int *path_error)
 {
 	char	**exec_args;
-	int		exec_access_error;
 
 	if (!command || !command[0])
 	{
@@ -118,10 +118,10 @@ char	**get_exec_path(char *command, char **envp, int *path_error)
 	}
 	if (is_abs_or_pwd_path(exec_args[0]))
 	{
-		exec_access_error = check_exec_access(exec_args[0], path_error);
-		if (exec_access_error == 0)
+		*path_error = check_exec_access(exec_args[0]);
+		if (*path_error == 0)
 			return (exec_args);
-		if (exec_access_error == 2)
+		if (*path_error == 126)
 		{
 			print_error(strerror(errno), exec_args[0]);
 			free_strv(exec_args);

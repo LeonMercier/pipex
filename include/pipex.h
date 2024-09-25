@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:21:10 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 09:25:48 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 15:24:14 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,9 @@ typedef struct s_files
 char	**get_exec_path(char *command, char **envp, int *path_error);
 // path_helpers.c
 bool	is_abs_or_pwd_path(char *cmd);
-int		check_exec_access(char *cmd, int *path_error);
+int		check_exec_access(char *cmd);
 // utils.c
-int		check_exec_access(char *cmd, int *path_error);
-void		open_files(t_files *files, char *infile_name, char *outfile_name);
+void	open_files(t_files *files, char *infile_name, char *outfile_name);
 void	close_all(t_files files, int pipefd[2]);
 void	print_error(char *message, char *filename);
 void	free_strv(char **strv);

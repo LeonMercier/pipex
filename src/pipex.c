@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 15:17:48 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 10:47:26 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/25 14:59:20 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	}
 	open_files(&files, argv[1], argv[4]);
+	path_error = 0;
 	exec_args1 = get_exec_path(argv[2], envp, &path_error);
 	path_error = 0;
 	exec_args2 = get_exec_path(argv[3], envp, &path_error);

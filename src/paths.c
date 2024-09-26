@@ -6,7 +6,7 @@
 /*   By: lemercie <lemercie@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 14:38:19 by lemercie          #+#    #+#             */
-/*   Updated: 2024/09/25 15:46:23 by lemercie         ###   ########.fr       */
+/*   Updated: 2024/09/26 11:58:03 by lemercie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static char	**search_paths(char **exec_args, char **envp, int *path_error)
 // if the cmd is a space ==> return 127
 // if the cmd is a real file but not executable ==> return 126
 // if the cmd is not found ==> return 127
-char	**get_exec_path_more(char *command, char **envp, int *path_error)
+static char	**get_exec_path_more(char *command, char **envp, int *path_error)
 {	
 	char	**exec_args;
 
